@@ -11,6 +11,6 @@
 
 # Codehawks
 ## First Flight
-| Date | Event | No. Findings |
+| Date | Event | Findings |
 |------------|---------------------------------------| ------------------- |
-| PasswordStore| [PasswordStore.md](CodeHawks/First%20Flight/aviksaikat-First-Flight-\#1_-PasswordStore.md) | H -2
+| PasswordStore| [PasswordStore.md](CodeHawks/First%20Flight/aviksaikat-First-Flight-%231_-PasswordStore.md) | High - 2

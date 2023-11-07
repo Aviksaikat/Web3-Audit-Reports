@@ -1,5 +1,4 @@
-
-# [L-3] Loss of precision
+# \[L-3\] Loss of precision
 
 ## Vulnerability Details
 
@@ -159,15 +158,14 @@ Division by large numbers may result in the result being zero, due to solidity n
 - https://github.com/code-423n4/2023-09-venus/blob/main/./contracts/test/assets/BEP20XRP.sol#L234
 
 ## Impact
-Division by large numbers may result in the result being zero, due to solidity not supporting fractions.
 
+Division by large numbers may result in the result being zero, due to solidity not supporting fractions.
 
 ## Recommended Mitigation Steps
 
 Consider requiring a minimum amount for the numerator to ensure that it is always larger than the denominator.
 
-
-# [L-4] `Initialization` can be front-run
+# \[L-4\] `Initialization` can be front-run
 
 ## Vulnerability Details
 
@@ -195,14 +193,14 @@ The `initialize()` functions below are not called by another contract atomically
 - https://github.com/code-423n4/2023-09-venus/blob/main/./contracts/test/VBep20MockDelegate.sol#L24
 
 ## Impact
-A malicious user can call this to take ownership of this contract.
 
+A malicious user can call this to take ownership of this contract.
 
 ## Recommended Mitigation Steps
 
 Consider creating a factory contract, which will `new` and `initialize()` each contract atomically.
 
-# [L-5] Use `Ownable2Step` rather than `Ownable`
+# \[L-5\] Use `Ownable2Step` rather than `Ownable`
 
 ## Vulnerability Details
 
@@ -252,14 +250,14 @@ Consider creating a factory contract, which will `new` and `initialize()` each c
 - https://github.com/code-423n4/2023-09-venus/blob/main/./contracts/test/assets/BEP20XRP.sol#L343
 
 ## Impact
-Contract ownership can be transferred to an address that cannot handle it.
 
+Contract ownership can be transferred to an address that cannot handle it.
 
 ## Recommended Mitigation Steps
 
 Use `Ownable2Step` instead of `Ownable`.
 
-# [L-6] Upgradeable contract is missing a `__gap[50]` storage variable to allow for new storage variables in later versions
+# \[L-6\] Upgradeable contract is missing a `__gap[50]` storage variable to allow for new storage variables in later versions
 
 ## Vulnerability Details
 
@@ -321,35 +319,37 @@ See this [link](https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_
 - https://github.com/code-423n4/2023-09-venus/blob/main/./contracts/test/MockProtocolShareReserve.sol#L442
 
 ## Impact
-This is empty reserved space in storage that is put in place in Upgradeable contracts. It allows us to freely add new state variables in the future without compromising the storage compatibility with existing deployments.
 
+This is empty reserved space in storage that is put in place in Upgradeable contracts. It allows us to freely add new state variables in the future without compromising the storage compatibility with existing deployments.
 
 ## Recommended Mitigation Steps
 
 # TODO: manual review
+
 .//before
 contract Base {
-    uint256 base1;
-    uint256 base2;
+uint256 base1;
+uint256 base2;
 }
 
 //after
 
 contract Base {
-    uint256 base1;
-    uint256[49] __gap;
+uint256 base1;
+uint256\[49\] \_\_gap;
 }
 
 contract Child is Base {
-    uint256 child;
+uint256 child;
 }
 Reference: https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable#modifying-your-contracts
 
-# [N-7] `public functions not called by the contract should be declared external instead`
+# \[N-7\] `public functions not called by the contract should be declared external instead`
 
 ## Vulnerability Details
 
 Contracts are allowed to override their parents' functions and change the visibility from `external` to `public`.
+
 ## Lines of code
 
 ### Total -> 414
@@ -771,16 +771,14 @@ Contracts are allowed to override their parents' functions and change the visibi
 
 ## Impact
 
-
 ## Recommended Mitigation Steps
 
-
-
-# [N-8] Event is not properly `indexed`.
+# \[N-8\] Event is not properly `indexed`.
 
 ## Vulnerability Details
 
 Index event fields make the field more quickly accessible to [off-chain tools](https://ethereum.stackexchange.com/questions/40396/can-somebody-please-explain-the-concept-of-event-indexing) that parse events.This is especially useful when it comes to filtering based on an address. However, note that each index field costs extra gas during emission, so it's not necessarily best to index the maximum allowed per event (three fields).
+
 ## Lines of code
 
 ### Total -> 362
@@ -1150,17 +1148,18 @@ Index event fields make the field more quickly accessible to [off-chain tools](h
 
 ## Impact
 
-
 ## Recommended Mitigation Steps
 
 Where applicable, each event should use three indexed fields if there are three or more fields, and gas usage is not particularly of concern for the events in question. If there are fewer than three applicable fields, all of the applicable fields should be indexed.
 
-# [N-9] Usually lines in source code are limited to [80 characters](https://softwareengineering.stackexchange.com/questions/148677/why-is-80-characters-the-standard-limit-for-code-width)
+# \[N-9\] Usually lines in source code are limited to [80 characters](https://softwareengineering.stackexchange.com/questions/148677/why-is-80-characters-the-standard-limit-for-code-width)
+
 .
 
 ## Vulnerability Details
 
 {no_of_line}
+
 ## Lines of code
 
 ### Total -> 114
@@ -1282,16 +1281,14 @@ Where applicable, each event should use three indexed fields if there are three 
 
 ## Impact
 
-
 ## Recommended Mitigation Steps
 
-
-
-# [N-10] Gas griefing/theft is possible on an unsafe external call
+# \[N-10\] Gas griefing/theft is possible on an unsafe external call
 
 ## Vulnerability Details
 
 A low-level call will copy any amount of bytes to local memory. When bytes are copied from return data to memory, the memory expansion cost is paid. This means that when using a standard solidity call, the callee can `returnbomb` the caller, imposing an arbitrary gas cost. Because this gas is paid by the caller and in the caller's context, it can cause the caller to run out of gas and halt execution.
+
 ## Lines of code
 
 ### Total -> 1
@@ -1300,16 +1297,16 @@ A low-level call will copy any amount of bytes to local memory. When bytes are c
 
 ## Impact
 
-
 ## Recommended Mitigation Steps
 
 Consider replacing all unsafe call with excessivelySafeCall from this [repository](https://github.com/nomad-xyz/ExcessivelySafeCall).
 
-# [N-11] No access control on `receive`/`payable` fallback
+# \[N-11\] No access control on `receive`/`payable` fallback
 
 ## Vulnerability Details
 
 Users may send ETH by mistake to these contracts. As there is no access control on these functions, the funds will be permanently lost.
+
 ## Lines of code
 
 ### Total -> 1
@@ -1318,16 +1315,14 @@ Users may send ETH by mistake to these contracts. As there is no access control 
 
 ## Impact
 
-
 ## Recommended Mitigation Steps
 
-
-
-# [N-12] Use a `modifier` instead of `require` to check for `msg.sender`
+# \[N-12\] Use a `modifier` instead of `require` to check for `msg.sender`
 
 ## Vulnerability Details
 
 If some functions are only allowed to be called by some specific users, consider using a `modifier` instead of checking with a `require` statement, especially if this check is done in multiple functions.
+
 ## Lines of code
 
 ### Total -> 441
@@ -1776,7 +1771,4 @@ If some functions are only allowed to be called by some specific users, consider
 
 ## Impact
 
-
 ## Recommended Mitigation Steps
-
-
